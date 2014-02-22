@@ -1,0 +1,64 @@
+@font-face {
+    font-family: 'Super Mario World Big';
+    src: url('../fonts/super_mario_world_big.woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    margin: 0; padding: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    display: table;
+    -webkit-user-select: none;
+    cursor: default;
+}
+
+.wrapper {
+    display: table-cell;
+    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    background-color: #000;
+    vertical-align: middle;
+}
+
+.logo {
+    display: none;
+    position: absolute;
+    top: 40%;
+    left: 0;
+    width: 100%;
+    font-family: 'Super Mario World Big';
+    font-size: 4em;
+    text-align: center;
+    text-transform: uppercase;
+    background: -webkit-linear-gradient(top, #fec100 0%, #f2ff00 25%, #f8f8f8 45%, #f8f8f8 55%, #f2ff00 75%, #fec100 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-font-smoothing: none;
+    z-index: 9999;
+}
+
+.stage {
+    display: block;
+    width: 100%;
+    height: auto;
+    background-color: #0065BD;
+}
+
+.depressing {
+    -webkit-filter: grayscale(1);
+    transition: 2s;
+}

@@ -7,11 +7,25 @@
 
     var context = canvas.getContext('2d'),
         data = {},
+        assets = {},
         current_scene = null;
 
     function isArray(obj) {
 
         return Object.prototype.toString.call(obj) === '[object Array]' ? true : false;
+
+    }
+
+    function showConsoleHeader(text) {
+
+        console.log(
+            '%c %c %c ' + text + ' %c %c ',
+            'font-size: 1.5em; background: #f0f;',
+            'font-size: 1.5em; background: #f0c;',
+            'font-size: 1.5em; background: #f0a; color: #fff;',
+            'font-size: 1.5em; background: #f0c;',
+            'font-size: 1.5em; background: #f0f;'
+        );
 
     }
 
@@ -27,14 +41,20 @@
 
     }
 
-    function loadSprite(image, config) {
+    function loadImage(image) {
 
         var img = document.createElement('img');
 
         img.src = image;
 
+        return img;
+
+    }
+
+    function loadSprite(image, config) {
+
         return {
-            image: img,
+            image: loadImage(image),
             config: loadConfig(config)
         };
 
@@ -114,20 +134,27 @@
 
     function scene_level(level) {
 
-        var scene_offset = { _x: 0, _y: 80 };
+        var scene_settings = { _x: 0, _y: 80 },
+            logo_settings = { _opacity: 0 };
 
-        $(scene_offset).delay(1000).animate({ _x: -2000 }, 2000, function () {
+        $(scene_settings).delay(1000).animate({ _x: -2000 }, 2000, function () {
 
             canvas.classList.add('depressing');
 
+            $('.logo').delay(600).fadeIn(500);
+
         });
-        $(scene_offset).delay(300).animate({ _y: -144 }, 1000);
+        $(scene_settings).delay(300).animate({ _y: -144 }, 1000);
 
         function render_scene() {
 
-            context.translate(scene_offset._x, scene_offset._y);
+            context.save();
+
+            context.translate(scene_settings._x, scene_settings._y);
 
             drawSpriteSheet(level, data.sprites);
+
+            context.restore();
 
         }
 
@@ -159,6 +186,8 @@
 
     }
 
+    showConsoleHeader('PURPLE MONKEY GAME JAM — FEB 2014');
+
     data.sprites = loadSprite('images/sprites.png', 'images/sprites.json');
     data.level1 = loadConfig('data/levels/level1.json');
 
@@ -166,4 +195,4 @@
 
     window.requestAnimationFrame(draw);
 
-}(document.querySelector('canvas')));
+}(document.querySelector('.stage')));
