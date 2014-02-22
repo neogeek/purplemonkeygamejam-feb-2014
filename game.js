@@ -7,8 +7,8 @@
 
     var context = canvas.getContext('2d'),
         data = {},
-        assets = {},
-        current_scene = null;
+        current_scene = null,
+        ftime = null;
 
     function isArray(obj) {
 
@@ -62,10 +62,48 @@
 
     function drawSprite(sprite, name, x, y, width, height) {
 
+        var frame = sprite.config[name];
+
+        if (sprite.config[name].hasOwnProperty('frames')) {
+
+            if (!sprite.config[name].hasOwnProperty('currentFrame')) {
+
+                sprite.config[name].currentFrame = 0;
+
+            } else if (sprite.config[name].currentFrame >= sprite.config[name].frames.length) {
+
+                sprite.config[name].currentFrame = 0;
+
+            }
+
+            frame = frame.frames[sprite.config[name].currentFrame];
+
+            if (!sprite.config[name].ftime || ftime - sprite.config[name].ftime > 120) {
+
+                sprite.config[name].ftime = ftime;
+
+                sprite.config[name].currentFrame = sprite.config[name].currentFrame + 1;
+
+            }
+
+        }
+
+        if (!width) {
+
+            width = frame.width;
+
+        }
+
+        if (!height) {
+
+            height = frame.height;
+
+        }
+
         context.drawImage(
             sprite.image,
-            sprite.config[name].x,
-            sprite.config[name].y,
+            frame.x,
+            frame.y,
             width,
             height,
             x,
@@ -82,12 +120,14 @@
 
             var x = value.x,
                 y = value.y,
-                width = value.width || sprites.config[value.name].width,
-                height = value.height || sprites.config[value.name].height,
+                width = value.width || null,
+                height = value.height || null,
                 tileX = 0,
                 tileY = 0,
                 tileX_length = value.tileX || 1,
-                tileY_length = value.tileY || 1;
+                tileY_length = value.tileY || 1,
+                tileWidth = sprites.config[value.name].width,
+                tileHeight = sprites.config[value.name].height;
 
             if (isArray(x)) {
 
@@ -116,8 +156,8 @@
                     drawSprite(
                         sprites,
                         value.name,
-                        x + (tileX * width),
-                        y + (tileY * height),
+                        x + (tileX * tileWidth),
+                        y + (tileY * tileHeight),
                         width,
                         height
                     );
@@ -135,13 +175,15 @@
     function scene_level(level) {
 
         var scene_settings = { _x: 0, _y: 80 },
-            logo_settings = { _opacity: 0 };
+            mario_settings = { _x: 1800 };
+
+        $(mario_settings).delay(2000).animate({ _x: 2350 }, 2500, 'linear');
 
         $(scene_settings).delay(1000).animate({ _x: -2000 }, 2000, function () {
 
             canvas.classList.add('depressing');
 
-            $('.logo').delay(600).fadeIn(500);
+            $('.logo').delay(600).fadeIn(500).delay(1000).fadeOut(500);
 
         });
         $(scene_settings).delay(300).animate({ _y: -144 }, 1000);
@@ -154,6 +196,8 @@
 
             drawSpriteSheet(level, data.sprites);
 
+            drawSprite(data.mario, 'run', mario_settings._x, 116);
+
             context.restore();
 
         }
@@ -164,7 +208,9 @@
 
     }
 
-    function draw() {
+    function draw(time) {
+
+        ftime = time;
 
         context.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -176,9 +222,11 @@
 
             current_scene = scene_level(data.level1);
 
-        }
+        } else {
 
-        current_scene();
+            current_scene();
+
+        }
 
         context.restore();
 
@@ -189,6 +237,7 @@
     showConsoleHeader('PURPLE MONKEY GAME JAM — FEB 2014');
 
     data.sprites = loadSprite('images/sprites.png', 'images/sprites.json');
+    data.mario = loadSprite('images/mario.png', 'images/mario.json');
     data.level1 = loadConfig('data/levels/level1.json');
 
     context.webkitImageSmoothingEnabled = false;
