@@ -1,0 +1,74 @@
+{
+    "ground_top_left": {
+        "x": 0,
+        "y": 0,
+        "width": 16,
+        "height": 16
+    },
+    "ground_left": {
+        "x": 0,
+        "y": 17,
+        "width": 16,
+        "height": 16
+    },
+    "ground_top": {
+        "x": 0,
+        "y": 34,
+        "width": 16,
+        "height": 16
+    },
+    "ground_middle": {
+        "x": 0,
+        "y": 51,
+        "width": 16,
+        "height": 16
+    },
+    "ground_top_right": {
+        "x": 0,
+        "y": 68,
+        "width": 16,
+        "height": 16
+    },
+    "ground_right": {
+        "x": 0,
+        "y": 85,
+        "width": 16,
+        "height": 16
+    },
+    "pipe": {
+        "x": 17,
+        "y": 0,
+        "width": 32,
+        "height": 99
+    },
+    "?block": {
+        "x": 50,
+        "y": 0,
+        "width": 16,
+        "height": 16
+    },
+    "stomp_block": {
+        "x": 50,
+        "y": 17,
+        "width": 16,
+        "height": 16
+    },
+    "stone": {
+        "x": 50,
+        "y": 34,
+        "width": 16,
+        "height": 16
+    },
+    "music_note": {
+        "x": 50,
+        "y": 51,
+        "width": 16,
+        "height": 16
+    },
+    "coin": {
+        "x": 66,
+        "y": 0,
+        "width": 16,
+        "height": 16
+    }
+}

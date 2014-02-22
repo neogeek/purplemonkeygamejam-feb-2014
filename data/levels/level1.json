@@ -1,0 +1,283 @@
+[
+
+    {
+        "name": "ground_top",
+        "x": 0,
+        "y": [16, 9],
+        "tileX": 40
+    },
+    {
+        "name": "ground_middle",
+        "x": 0,
+        "y": [16, 10],
+        "tileX": 40,
+        "tileY": 20
+    },
+    {
+        "name": "ground_top_right",
+        "x": [16, 40],
+        "y": [16, 9]
+    },
+    {
+        "name": "ground_right",
+        "x": [16, 40],
+        "y": [16, 10],
+        "tileY": 20
+    },
+
+    {
+        "name": "ground_top_left",
+        "x": [16, 44],
+        "y": [16, 9]
+    },
+    {
+        "name": "ground_left",
+        "x": [16, 44],
+        "y": [16, 10],
+        "tileY": 20
+    },
+    {
+        "name": "ground_top",
+        "x": [16, 45],
+        "y": [16, 9],
+        "tileX": 60
+    },
+    {
+        "name": "ground_middle",
+        "x": [16, 45],
+        "y": [16, 10],
+        "tileX": 60,
+        "tileY": 20
+    },
+    {
+        "name": "ground_top_right",
+        "x": [16, 105],
+        "y": [16, 9]
+    },
+    {
+        "name": "ground_right",
+        "x": [16, 105],
+        "y": [16, 10],
+        "tileY": 20
+    },
+
+    {
+        "name": "ground_top_left",
+        "x": [16, 110],
+        "y": [16, 9]
+    },
+    {
+        "name": "ground_left",
+        "x": [16, 110],
+        "y": [16, 10],
+        "tileY": 20
+    },
+    {
+        "name": "ground_top",
+        "x": [16, 111],
+        "y": [16, 9],
+        "tileX": 46
+    },
+    {
+        "name": "ground_middle",
+        "x": [16, 111],
+        "y": [16, 10],
+        "tileX": 46,
+        "tileY": 20
+    },
+
+    {
+        "name": "pipe",
+        "x": 200,
+        "y": [16, 9],
+        "height": 32,
+        "anchor": "bottom"
+    },
+    {
+        "name": "coin",
+        "x": 207,
+        "y": [16, 5]
+    },
+    {
+        "name": "pipe",
+        "x": 300,
+        "y": [16, 9],
+        "height": 48,
+        "anchor": "bottom"
+    },
+    {
+        "name": "coin",
+        "x": 307,
+        "y": [16, 4]
+    },
+    {
+        "name": "pipe",
+        "x": 400,
+        "y": [16, 9],
+        "height": 64,
+        "anchor": "bottom"
+    },
+    {
+        "name": "coin",
+        "x": 407,
+        "y": [16, 3]
+    },
+    {
+        "name": "pipe",
+        "x": 500,
+        "y": [16, 9],
+        "height": 48,
+        "anchor": "bottom"
+    },
+    {
+        "name": "coin",
+        "x": 507,
+        "y": [16, 4]
+    },
+
+    {
+        "name": "stone",
+        "x": 884,
+        "y": [16, 5],
+        "tileY": 4
+    },
+    {
+        "name": "pipe",
+        "x": 900,
+        "y": [16, 9],
+        "height": 48,
+        "anchor": "bottom"
+    },
+    {
+        "name": "stone",
+        "x": 932,
+        "y": [16, 5],
+        "tileY": 4
+    },
+    {
+        "name": "stomp_block",
+        "x": 900,
+        "y": [16, 5],
+        "tileX": 2
+    },
+
+    {
+        "name": "coin",
+        "x": 1100,
+        "y": [16, 6],
+        "tileX": 8
+    },
+    {
+        "name": "coin",
+        "x": 1230,
+        "y": [16, 5],
+        "tileX": 5
+    },
+    {
+        "name": "coin",
+        "x": 1310,
+        "y": [16, 6],
+        "tileX": 8
+    },
+
+    {
+        "name": "stone",
+        "x": 1550,
+        "y": [16, 8],
+        "tileX": 6
+    },
+    {
+        "name": "stone",
+        "x": 1566,
+        "y": [16, 7],
+        "tileX": 5
+    },
+    {
+        "name": "stone",
+        "x": 1582,
+        "y": [16, 6],
+        "tileX": 4
+    },
+    {
+        "name": "stone",
+        "x": 1598,
+        "y": [16, 5],
+        "tileX": 3
+    },
+    {
+        "name": "stone",
+        "x": 1614,
+        "y": [16, 4],
+        "tileX": 2
+    },
+    {
+        "name": "stone",
+        "x": 1630,
+        "y": [16, 3]
+    },
+
+
+    {
+        "name": "coin",
+        "x": 1800,
+        "y": [16, 6],
+        "tileX": 8
+    },
+    {
+        "name": "stone",
+        "x": 2000,
+        "y": [16, 4],
+        "tileX": 2
+    },
+    {
+        "name": "pipe",
+        "x": 2000,
+        "y": [16, 4],
+        "height": 30,
+        "anchor": "bottom"
+    },
+
+    {
+        "name": "coin",
+        "x": 2100,
+        "y": [16, 6],
+        "tileX": 8
+    },
+
+    {
+        "name": "stone",
+        "x": 2404,
+        "y": [16, 8],
+        "tileX": 6
+    },
+    {
+        "name": "stone",
+        "x": 2420,
+        "y": [16, 7],
+        "tileX": 5
+    },
+    {
+        "name": "stone",
+        "x": 2436,
+        "y": [16, 6],
+        "tileX": 4
+    },
+    {
+        "name": "stone",
+        "x": 2452,
+        "y": [16, 5],
+        "tileX": 3
+    },
+    {
+        "name": "stone",
+        "x": 2468,
+        "y": [16, 4],
+        "tileX": 2
+    },
+    {
+        "name": "stone",
+        "x": 2484,
+        "y": [16, 3]
+    }
+
+]
