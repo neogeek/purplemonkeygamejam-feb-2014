@@ -324,9 +324,9 @@
 
             $('.logo').fadeIn(800).delay(1000).fadeOut(800);
 
-            $(mario_settings).delay(2000).animate({ _x: 2350 }, { duration: 2500, easing: 'linear' });
+            $(mario_settings).delay(3000).animate({ _x: 2350 }, { duration: 2500, easing: 'linear' });
 
-            $(scene_settings).delay(1000).animate({ _x: -2000 }, 2000, function () {
+            $(scene_settings).delay(2000).animate({ _x: -2000 }, 2000, function () {
 
                 canvas.classList.add('depressing');
 
