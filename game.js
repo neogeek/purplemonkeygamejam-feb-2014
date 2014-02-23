@@ -8,9 +8,11 @@
     var context = canvas.getContext('2d'),
         data = {},
         activeKeys = { up: false, down: false, left: false, right: false },
-        player_settings = { x: 450, y: 160 },
+        player_settings = { x: 650, y: 160, width: 16, height: 29 },
         current_scene = null,
-        ftime = null;
+        ftime = null,
+        speed = 0.2,
+        map = [];
 
     function isArray(obj) {
 
@@ -184,47 +186,59 @@
 
         var i,
             enemies_list = Object.keys(data.enemies.config),
-            map = [];
+            map_output = [],
+            key;
 
         for (i = 0; i < 2000; i = i + 1) {
 
-            map.push({
+            key = enemies_list[random(enemies_list.length - 1)];
+
+            map_output.push({
 
                 sprite: data.enemies,
-                key: enemies_list[random(enemies_list.length - 1)],
+                key: key,
                 x: random(1200),
                 y: random(200),
+                width: data.enemies.config[key].width,
+                height: data.enemies.config[key].height,
+                alpha: 100,
                 rotate: random(360)
 
             });
 
         }
+
+        key = 'dead';
 
         for (i = 0; i < 100; i = i + 1) {
 
-            map.push({
+            map_output.push({
 
                 sprite: data.mario,
-                key: 'dead',
+                key: key,
                 x: random(1200),
                 y: random(200),
+                width: data.mario.config[key].width,
+                height: data.mario.config[key].height,
+                alpha: 100,
                 rotate: random(360)
 
             });
 
         }
 
-        map.sort(function () { return 0.5 - Math.random(); });
+        map_output.sort(function () { return 0.5 - Math.random(); });
 
-        return map;
+        return map_output;
 
     }
 
     function scene_level(level) {
 
         var scene_settings = { _x: 0, _y: 80 },
-            mario_settings = { _x: 1800, _y: 116 },
-            map = generate_map();
+            mario_settings = { _x: 1800, _y: 116 };
+
+        map = generate_map();
 
         $('.logo').fadeIn(800).delay(1000).fadeOut(800);
 
@@ -236,8 +250,6 @@
 
         });
         $(scene_settings).delay(500).animate({ _y: -144 }, 1000);
-
-        scene_settings = { _x: -2000, _y: -144 };
 
         function render_scene() {
 
@@ -253,10 +265,13 @@
 
             map.forEach(function (item) {
 
+                if (!item) { return false; }
+
                 context.save();
 
                 context.translate(item.x, item.y);
 
+                /*
                 context.translate(
                     item.sprite.config[item.key].width,
                     item.sprite.config[item.key].height
@@ -268,6 +283,9 @@
                     -item.sprite.config[item.key].width,
                     -item.sprite.config[item.key].height
                 );
+                */
+
+                context.globalAlpha = item.alpha / 100;
 
                 drawSprite(
                     item.sprite,
@@ -279,8 +297,6 @@
                 context.restore();
 
             });
-
-            context.translate(200, 0);
 
             drawSprite(data.mario, 'climb', player_settings.x, player_settings.y);
 
@@ -294,9 +310,50 @@
 
     }
 
+    function testCollision(test, against) {
+
+        var collisions = [],
+            collision_test;
+
+        test._SAT = new SAT.Box(new SAT.Vector(test.x, test.y), test.width, test.height).toPolygon();
+
+        against.forEach(function (item, key) {
+
+            var response = new SAT.Response();
+
+            if (!item) { return false; }
+
+            item._SAT = new SAT.Box(new SAT.Vector(item.x, item.y), item.width, item.height).toPolygon();
+
+            collision_test = SAT.testPolygonPolygon(test._SAT, item._SAT, response);
+
+            if (collision_test) {
+
+                collisions.push(response);
+
+                if (Math.abs(response.overlapV.x) > 5) {
+
+                    item.x = item.x - (test.x - item.x) / 5;
+                    item.y = item.y - (test.y - item.y) / 5;
+
+                } else if (Math.abs(response.overlapV.y) > 5) {
+
+                    item.x = item.x - (test.x - item.x) / 5;
+                    item.y = item.y - (test.y - item.y) / 5;
+
+                }
+
+            }
+
+        });
+
+        return collisions;
+
+    }
+
     function draw(time) {
 
-        var speed = .2;
+        var collisions;
 
         ftime = time;
 
@@ -319,6 +376,18 @@
         } else if (activeKeys.right) {
 
             player_settings.x = player_settings.x + speed;
+
+        }
+
+        collisions = testCollision(player_settings, map);
+
+        if (collisions.length > 5) {
+
+            speed = 0.2;
+
+        } else {
+
+            speed = 0.5;
 
         }
 
@@ -393,7 +462,7 @@
 
             activeKeys.down = false;
 
-        } if (e.keyCode === 37) {
+        } else if (e.keyCode === 37) {
 
             activeKeys.left = false;
 
@@ -404,5 +473,7 @@
         }
 
     });
+
+    window.draw = draw;
 
 }(document.querySelector('.stage')));
