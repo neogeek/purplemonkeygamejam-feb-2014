@@ -12,5 +12,26 @@
         "width": 16,
         "height": 14,
         "explosivePower": 30
+    },
+    "star": {
+        "x": 17,
+        "y": 0,
+        "width": 15,
+        "height": 15,
+        "speedBoost": 1
+    },
+    "mushroom_red": {
+        "x": 33,
+        "y": 0,
+        "width": 16,
+        "height": 16,
+        "sizeIncrease": 2
+    },
+    "mushroom_green": {
+        "x": 33,
+        "y": 17,
+        "width": 16,
+        "height": 16,
+        "sizeIncrease": 2
     }
 }

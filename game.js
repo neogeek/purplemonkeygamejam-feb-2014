@@ -14,7 +14,11 @@
         ftime = null,
         speed = 0.2,
         map = [],
-        explosivePower = 0;
+        powerups = {
+            explosivePower: 0,
+            speedBoost: 0,
+            sizeIncrease: 0
+        };
 
     function isArray(obj) {
 
@@ -204,7 +208,6 @@
                 y: random(200),
                 width: data.enemies.config[key].width,
                 height: data.enemies.config[key].height,
-                explosivePower: data.enemies.config[key].explosivePower,
                 alpha: 100,
                 rotate: random(360)
 
@@ -224,7 +227,6 @@
                 y: random(200),
                 width: data.mario.config[key].width,
                 height: data.mario.config[key].height,
-                explosivePower: 0,
                 alpha: 100,
                 rotate: random(360)
 
@@ -247,6 +249,8 @@
                 width: data.powerups.config[key].width,
                 height: data.powerups.config[key].height,
                 explosivePower: data.powerups.config[key].explosivePower,
+                speedBoost: data.powerups.config[key].speedBoost,
+                sizeIncrease: data.powerups.config[key].sizeIncrease,
                 alpha: 100,
                 rotate: random(360)
 
@@ -354,13 +358,30 @@
 
             test._SAT = new SAT.Box(new SAT.Vector(test.x, test.y), test.width, test.height).toPolygon();
 
-        } else if (explosivePower) {
+        }
 
-            test._SAT = new SAT.Box(new SAT.Vector(test.x - explosivePower / 2, test.y - explosivePower / 2), test.width + explosivePower, test.height + explosivePower).toPolygon();
+        if (powerups.explosivePower) {
+
+            test._SAT = new SAT.Box(
+                new SAT.Vector(
+                    test.x - powerups.explosivePower / 2,
+                    test.y - powerups.explosivePower / 2
+                ),
+                test.width + powerups.explosivePower,
+                test.height + powerups.explosivePower
+            ).toPolygon();
 
             $(canvas).animate({ zoom: 1.01 }, 25).animate({ zoom: 1 }, 25);
 
-            setTimeout(function () { explosivePower = 0; }, 100);
+            setTimeout(function () { powerups.explosivePower = 0; }, 100);
+
+        }
+
+        if (powerups.speedBoost) {
+
+            setTimeout(function () {
+                powerups.speedBoost = 0;
+            }, 2000);
 
         }
 
@@ -382,12 +403,19 @@
 
                 if (Math.abs(response.overlapV.x) > 5 || Math.abs(response.overlapV.y) > 5) {
 
-                    if (explosivePower) {
+                    if (powerups.explosivePower) {
 
                         $(item).stop().animate({
                             x: item.x - (test.x - item.x),
                             y: item.y - (test.y - item.y)
                         }, 100, 'easeOutCubic', (function (item) { item._SAT = null; }(item)));
+
+                    } else if (powerups.speedBoost) {
+
+                        item.x = item.x - (test.x - item.x) / 4,
+                        item.y = item.y - (test.y - item.y) / 4
+
+                        item._SAT = null;
 
                     } else {
 
@@ -404,7 +432,19 @@
 
                 if (item.explosivePower) {
 
-                    explosivePower = item.explosivePower;
+                    powerups.explosivePower = item.explosivePower;
+
+                    against[key] = null;
+
+                } else if (item.speedBoost) {
+
+                    powerups.speedBoost = item.speedBoost;
+
+                    against[key] = null;
+
+                } else if (item.sizeIncrease) {
+
+                    powerups.sizeIncrease = item.sizeIncrease;
 
                     against[key] = null;
 
@@ -426,7 +466,7 @@
 
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        if (!explosivePower) {
+        if (!powerups.explosivePower) {
 
             if (activeKeys.up) {
 
@@ -462,11 +502,11 @@
 
         if (collisions.length > 5) {
 
-            speed = 0.2;
+            speed = 0.2 + powerups.speedBoost;
 
         } else {
 
-            speed = 0.5;
+            speed = 0.5 + powerups.speedBoost;
 
         }
 
