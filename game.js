@@ -370,6 +370,8 @@
 
                 powerups.explosivePower.value = 0;
 
+                test._SAT = null;
+
                 clearTimeout(powerups.explosivePower.timeout);
 
                 powerups.explosivePower.timeout = null;
@@ -406,7 +408,7 @@
 
             if (test._SAT instanceof SAT.Polygon) {
 
-                collision_test = SAT.testPolygonPolygon(test._SAT, item._SAT, response);
+                collision_test = SAT.testPolygonPolygon(item._SAT, test._SAT, response);
 
             } else if (test._SAT instanceof SAT.Circle) {
 
@@ -423,12 +425,16 @@
                         $(item).stop().animate({
                             x: item.x - (test.x - item.x),
                             y: item.y - (test.y - item.y)
-                        }, 100, 'easeOutCubic', (function (item) { item._SAT = null; }(item)));
+                        }, 400, 'easeOutCubic', (function (item) {
+
+                            item._SAT = null;
+
+                        }(item)));
 
                     } else if (powerups.speedBoost.value) {
 
-                        item.x = item.x - (test.x - item.x) / 4,
-                        item.y = item.y - (test.y - item.y) / 4
+                        item.x = item.x - (test.x - item.x) / 4;
+                        item.y = item.y - (test.y - item.y) / 4;
 
                         item._SAT = null;
 
@@ -437,7 +443,11 @@
                         $(item).stop().animate({
                             x: item.x - (test.x - item.x) / 5,
                             y: item.y - (test.y - item.y) / 5
-                        }, 300, 'linear', (function (item) { item._SAT = null; }(item)));
+                        }, 300, 'linear', (function (item) {
+
+                            item._SAT = null;
+
+                        }(item)));
 
                     }
 
@@ -446,8 +456,6 @@
                 collisions.push(response);
 
                 if (item.explosivePower) {
-
-                    clearTimeout(powerups.explosivePower.timeout);
 
                     powerups.explosivePower.value = item.explosivePower;
 
