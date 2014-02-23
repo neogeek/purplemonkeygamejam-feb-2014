@@ -1,4 +1,4 @@
-/*globals window, document, $ */
+/*globals window, document, $, SAT */
 /*jslint nomen: true */
 
 (function (canvas) {
@@ -12,7 +12,8 @@
         current_scene = null,
         ftime = null,
         speed = 0.2,
-        map = [];
+        map = [],
+        explosivePower = 0;
 
     function isArray(obj) {
 
@@ -186,6 +187,7 @@
 
         var i,
             enemies_list = Object.keys(data.enemies.config),
+            powerups_list = Object.keys(data.powerups.config),
             map_output = [],
             key;
 
@@ -201,6 +203,7 @@
                 y: random(200),
                 width: data.enemies.config[key].width,
                 height: data.enemies.config[key].height,
+                explosivePower: data.enemies.config[key].explosivePower,
                 alpha: 100,
                 rotate: random(360)
 
@@ -220,6 +223,7 @@
                 y: random(200),
                 width: data.mario.config[key].width,
                 height: data.mario.config[key].height,
+                explosivePower: 0,
                 alpha: 100,
                 rotate: random(360)
 
@@ -228,6 +232,26 @@
         }
 
         map_output.sort(function () { return 0.5 - Math.random(); });
+
+        for (i = 0; i < 10; i = i + 1) {
+
+            key = powerups_list[random(powerups_list.length - 1)];
+
+            map_output.push({
+
+                sprite: data.powerups,
+                key: key,
+                x: random(1200),
+                y: random(200),
+                width: data.powerups.config[key].width,
+                height: data.powerups.config[key].height,
+                explosivePower: data.powerups.config[key].explosivePower,
+                alpha: 100,
+                rotate: random(360)
+
+            });
+
+        }
 
         return map_output;
 
@@ -319,6 +343,14 @@
 
             test._SAT = new SAT.Box(new SAT.Vector(test.x, test.y), test.width, test.height).toPolygon();
 
+        } else if (explosivePower) {
+
+            test._SAT = new SAT.Box(new SAT.Vector(test.x - explosivePower / 2, test.y - explosivePower / 2), test.width + explosivePower, test.height + explosivePower).toPolygon();
+
+            $(canvas).animate({ zoom: 1.01 }, 25).animate({ zoom: 1 }, 25);
+
+            setTimeout(function () { explosivePower = 0; }, 50);
+
         }
 
         against.forEach(function (item, key) {
@@ -337,14 +369,33 @@
 
             if (collision_test) {
 
-                collisions.push(response);
-
                 if (Math.abs(response.overlapV.x) > 5 || Math.abs(response.overlapV.y) > 5) {
 
-                    $(item).stop().animate({
-                        x: item.x - (test.x - item.x) / 5,
-                        y: item.y - (test.y - item.y) / 5
-                    }, 300, 'linear', (function (item) { item._SAT = null; }(item)));
+                    if (explosivePower) {
+
+                        $(item).stop().animate({
+                            x: item.x - (test.x - item.x),
+                            y: item.y - (test.y - item.y)
+                        }, 100, 'easeOutCubic', (function (item) { item._SAT = null; }(item)));
+
+                    } else {
+
+                        $(item).stop().animate({
+                            x: item.x - (test.x - item.x) / 5,
+                            y: item.y - (test.y - item.y) / 5
+                        }, 300, 'linear', (function (item) { item._SAT = null; }(item)));
+
+                    }
+
+                }
+
+                collisions.push(response);
+
+                if (item.explosivePower) {
+
+                    explosivePower = item.explosivePower;
+
+                    against[key] = null;
 
                 }
 
@@ -364,31 +415,35 @@
 
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        if (activeKeys.up) {
+        if (!explosivePower) {
 
-            player_settings.y = player_settings.y - speed;
+            if (activeKeys.up) {
 
-            player_settings._SAT = null;
+                player_settings.y = player_settings.y - speed;
 
-        } else if (activeKeys.down) {
+                player_settings._SAT = null;
 
-            player_settings.y = player_settings.y + speed;
+            } else if (activeKeys.down) {
 
-            player_settings._SAT = null;
+                player_settings.y = player_settings.y + speed;
 
-        }
+                player_settings._SAT = null;
 
-        if (activeKeys.left) {
+            }
 
-            player_settings.x = player_settings.x - speed;
+            if (activeKeys.left) {
 
-            player_settings._SAT = null;
+                player_settings.x = player_settings.x - speed;
 
-        } else if (activeKeys.right) {
+                player_settings._SAT = null;
 
-            player_settings.x = player_settings.x + speed;
+            } else if (activeKeys.right) {
 
-            player_settings._SAT = null;
+                player_settings.x = player_settings.x + speed;
+
+                player_settings._SAT = null;
+
+            }
 
         }
 
@@ -423,6 +478,7 @@
     data.sprites = loadSprite('images/sprites.png', 'images/sprites.json');
     data.mario = loadSprite('images/mario.png', 'images/mario.json');
     data.enemies = loadSprite('images/enemies.png', 'images/enemies.json');
+    data.powerups = loadSprite('images/powerups.png', 'images/powerups.json');
     data.level1 = loadConfig('data/levels/level1.json');
 
     context.webkitImageSmoothingEnabled = false;
