@@ -14,5 +14,91 @@
                 "height": 28
             }
         ]
+    },
+    "awake": {
+        "frames": [
+            {
+                "x": 51,
+                "y": 29,
+                "width": 23,
+                "height": 12
+            },
+            {
+                "x": 75,
+                "y": 29,
+                "width": 16,
+                "height": 22
+            },
+            {
+                "x": 92,
+                "y": 29,
+                "width": 16,
+                "height": 29
+            },
+            {
+                "x": 109,
+                "y": 29,
+                "width": 16,
+                "height": 29
+            },
+            {
+                "x": 124,
+                "y": 29,
+                "width": 16,
+                "height": 27
+            },
+            {
+                "x": 141,
+                "y": 29,
+                "width": 16,
+                "height": 29
+            },
+            {
+                "x": 17,
+                "y": 29,
+                "width": 16,
+                "height": 28
+            }
+        ]
+    },
+    "climb": {
+        "frames": [
+            {
+                "x": 0,
+                "y": 29,
+                "width": 16,
+                "height": 29
+            },
+            {
+                "x": 17,
+                "y": 29,
+                "width": 16,
+                "height": 28
+            },
+            {
+                "x": 34,
+                "y": 29,
+                "width": 16,
+                "height": 29
+            },
+            {
+                "x": 17,
+                "y": 29,
+                "width": 16,
+                "height": 28
+            }
+        ]
+    },
+    "idle": {
+        "x": 17,
+        "y": 29,
+        "width": 16,
+        "height": 28
+    },
+    "dead": {
+        "x": 0,
+        "y": 59,
+        "width": 21,
+        "height": 21
     }
 }
