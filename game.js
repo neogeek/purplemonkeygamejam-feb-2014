@@ -8,6 +8,7 @@
     var DEBUG = false,
         context = canvas.getContext('2d'),
         data = {},
+        assets = {},
         activeKeys = { up: false, down: false, left: false, right: false },
         player_settings = {
             x: 650, y: 160,
@@ -21,6 +22,8 @@
         helper_settings = { x: 500, y: -200, talk: false },
         current_scene = null,
         game_start = false,
+        game_end = false,
+        game_end_scale = 1,
         ftime = null,
         speed = 0.2,
         map = [],
@@ -656,17 +659,17 @@
 
             }
 
-            if (testCollision(player_settings, enemies).length) {
+            if (testCollision(player_settings, enemies).length || player_settings.y < -60) {
 
-                alert('OH NO!!!!!!1');
-
-                game_start = false;
-
-            } else if (player_settings.y < -60) {
-
-                alert('You Win!');
+                game_end = true;
 
                 game_start = false;
+
+                $('canvas').delay(1000).animate({ opacity: 0 }, 2000, function () {
+
+                    window.location.reload();
+
+                });
 
             }
 
@@ -679,6 +682,24 @@
         } else {
 
             current_scene();
+
+        }
+
+        context.save();
+
+        if (game_end) {
+
+            context.translate(250, 120);
+
+            context.translate(assets.end.naturalWidth / 2, assets.end.naturalHeight / 2);
+            context.scale(game_end_scale, game_end_scale);
+            context.translate(-assets.end.naturalWidth / 2, -assets.end.naturalHeight / 2);
+
+            context.drawImage(assets.end, 0, 0);
+
+            context.restore();
+
+            game_end_scale = game_end_scale + 0.1;
 
         }
 
@@ -695,6 +716,8 @@
     data.helper = loadSprite('images/helper.png', 'images/helper.json');
     data.enemies = loadSprite('images/enemies.png', 'images/enemies.json');
     data.level1 = loadConfig('data/levels/level1.json');
+
+    assets.end = loadImage('images/end.png');
 
     context.webkitImageSmoothingEnabled = false;
 
