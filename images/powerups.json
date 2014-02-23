@@ -4,11 +4,11 @@
         "y": 0,
         "width": 16,
         "height": 14,
-        "explosivePower": 50
+        "explosivePower": 80
     },
     "bob_omb": {
         "x": 0,
-        "y": 0,
+        "y": 15,
         "width": 16,
         "height": 14,
         "explosivePower": 30

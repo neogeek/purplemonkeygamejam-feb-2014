@@ -23,7 +23,7 @@
 
     function random(num) {
 
-        return Math.floor(Math.random() * num) + 1;
+        return Math.floor(Math.random() * num);
 
     }
 
@@ -193,7 +193,7 @@
 
         for (i = 0; i < 2000; i = i + 1) {
 
-            key = enemies_list[random(enemies_list.length - 1)];
+            key = enemies_list[random(enemies_list.length)];
 
             map_output.push({
 
@@ -233,9 +233,9 @@
 
         map_output.sort(function () { return 0.5 - Math.random(); });
 
-        for (i = 0; i < 10; i = i + 1) {
+        for (i = 0; i < 25; i = i + 1) {
 
-            key = powerups_list[random(powerups_list.length - 1)];
+            key = powerups_list[random(powerups_list.length)];
 
             map_output.push({
 
@@ -349,7 +349,7 @@
 
             $(canvas).animate({ zoom: 1.01 }, 25).animate({ zoom: 1 }, 25);
 
-            setTimeout(function () { explosivePower = 0; }, 50);
+            setTimeout(function () { explosivePower = 0; }, 100);
 
         }
 
