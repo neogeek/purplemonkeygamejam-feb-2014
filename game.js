@@ -10,10 +10,13 @@
         data = {},
         activeKeys = { up: false, down: false, left: false, right: false },
         player_settings = { x: 650, y: 160, width: 16, height: 29 },
+        helper_settings = { x: 500, y: -200, talk: false },
         current_scene = null,
+        game_start = false,
         ftime = null,
         speed = 0.2,
         map = [],
+        enemies = [],
         powerups = {
             explosivePower: { value: 0, timeout: null, duration: 500 },
             speedBoost: { value: 0, timeout: null, duration: 5000 },
@@ -26,9 +29,15 @@
 
     }
 
-    function random(num) {
+    function random(max, min) {
 
-        return Math.floor(Math.random() * num);
+        if (String(typeof min) === 'undefined') {
+
+            min = 0;
+
+        }
+
+        return Math.floor(Math.random() * (max - min + 1) + min);
 
     }
 
@@ -86,10 +95,6 @@
 
                 sprite.config[name].currentFrame = 0;
 
-            } else if (sprite.config[name].currentFrame >= sprite.config[name].frames.length) {
-
-                sprite.config[name].currentFrame = 0;
-
             }
 
             frame = frame.frames[sprite.config[name].currentFrame];
@@ -98,7 +103,15 @@
 
                 sprite.config[name].ftime = ftime;
 
-                sprite.config[name].currentFrame = sprite.config[name].currentFrame + 1;
+                if (sprite.config[name].currentFrame + 1 < sprite.config[name].frames.length) {
+
+                    sprite.config[name].currentFrame = sprite.config[name].currentFrame + 1;
+
+                } else if (sprite.config[name].loop) {
+
+                    sprite.config[name].currentFrame = 0;
+
+                }
 
             }
 
@@ -191,14 +204,14 @@
     function generate_map() {
 
         var i,
-            corpses_list = Object.keys(data.corpses.config),
-            powerups_list = Object.keys(data.powerups.config),
+            corpses_keys = Object.keys(data.corpses.config),
+            powerups_keys = Object.keys(data.powerups.config),
             map_output = [],
             key;
 
-        for (i = 0; i < 2000; i = i + 1) {
+        for (i = 0; i < 1000; i = i + 1) {
 
-            key = corpses_list[random(corpses_list.length)];
+            key = corpses_keys[random(corpses_keys.length - 1)];
 
             map_output.push({
 
@@ -238,7 +251,7 @@
 
         for (i = 0; i < 25; i = i + 1) {
 
-            key = powerups_list[random(powerups_list.length)];
+            key = powerups_keys[random(powerups_keys.length - 1)];
 
             map_output.push({
 
@@ -262,12 +275,42 @@
 
     }
 
+    function generate_enemies() {
+
+        var enemies_output = [],
+            i,
+            enemies_keys = Object.keys(data.enemies.config),
+            key;
+
+        for (i = 0; i < 5; i = i + 1) {
+
+            key = enemies_keys[random(enemies_keys.length -1)];
+
+            enemies_output.push({
+
+                sprite: data.enemies,
+                key: key,
+                x: random.apply(null, data.enemies.config[key].range.x),
+                y: random.apply(null, data.enemies.config[key].range.y),
+                width: 16,
+                height: 16,
+                velocity: data.enemies.config[key].velocity
+
+            });
+
+        }
+
+        return enemies_output;
+
+    }
+
     function scene_level(level) {
 
         var scene_settings = { _x: 0, _y: 80 },
             mario_settings = { _x: 1800, _y: 116 };
 
         map = generate_map();
+        enemies = generate_enemies();
 
         if (!DEBUG) {
 
@@ -280,13 +323,29 @@
                 canvas.classList.add('depressing');
 
             });
-            $(scene_settings).delay(500).animate({ _y: -144 }, 1000);
+            $(scene_settings).delay(500).animate({ _y: -144 }, 1000, function () {
+
+                $(helper_settings).animate({ y: 100 }, 1000, function () {
+
+                    helper_settings.talk = true;
+
+                });
+
+                $(helper_settings).delay(2000).animate({ x: 1000 }, 1000, function () {
+
+                    game_start = true;
+
+                });
+
+            });
 
             document.querySelector('.sfx-background').play();
 
         } else {
 
             scene_settings = { _x: -2000, _y: -144 };
+
+            game_start = true;
 
         }
 
@@ -310,20 +369,6 @@
 
                 context.translate(item.x, item.y);
 
-                /*
-                context.translate(
-                    item.sprite.config[item.key].width,
-                    item.sprite.config[item.key].height
-                );
-
-                context.rotate(item.rotate * Math.PI / 180);
-
-                context.translate(
-                    -item.sprite.config[item.key].width,
-                    -item.sprite.config[item.key].height
-                );
-                */
-
                 context.globalAlpha = item.alpha / 100;
 
                 drawSprite(
@@ -337,7 +382,43 @@
 
             });
 
+            enemies.forEach(function (item) {
+
+                context.save();
+
+                context.translate(item.x, item.y);
+
+                drawSprite(
+                    item.sprite,
+                    item.key,
+                    0,
+                    0
+                );
+
+                if (game_start) {
+
+                    item.x = item.x + (player_settings.x > item.x ? item.velocity.x : -item.velocity.x);
+                    item.y = item.y + (player_settings.y > item.y ? item.velocity.y : -item.velocity.y);
+
+                    item._SAT = null;
+
+                }
+
+                testCollision(item, map);
+
+                context.restore();
+
+            });
+
             drawSprite(data.mario, 'climb', player_settings.x, player_settings.y);
+
+            drawSprite(data.helper, 'lakitu', helper_settings.x, helper_settings.y);
+
+            if (helper_settings.talk) {
+
+                drawSprite(data.helper, 'lakitu_speach_bubble', helper_settings.x + 30, helper_settings.y - 20);
+
+            }
 
             context.restore();
 
@@ -495,43 +576,47 @@
 
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        if (activeKeys.up) {
+        if (game_start) {
 
-            player_settings.y = player_settings.y - speed;
+            if (activeKeys.up) {
 
-            player_settings._SAT = null;
+                player_settings.y = player_settings.y - speed;
 
-        } else if (activeKeys.down) {
+                player_settings._SAT = null;
 
-            player_settings.y = player_settings.y + speed;
+            } else if (activeKeys.down) {
 
-            player_settings._SAT = null;
+                player_settings.y = player_settings.y + speed;
 
-        }
+                player_settings._SAT = null;
 
-        if (activeKeys.left) {
+            }
 
-            player_settings.x = player_settings.x - speed;
+            if (activeKeys.left) {
 
-            player_settings._SAT = null;
+                player_settings.x = player_settings.x - speed;
 
-        } else if (activeKeys.right) {
+                player_settings._SAT = null;
 
-            player_settings.x = player_settings.x + speed;
+            } else if (activeKeys.right) {
 
-            player_settings._SAT = null;
+                player_settings.x = player_settings.x + speed;
 
-        }
+                player_settings._SAT = null;
 
-        collisions = testCollision(player_settings, map);
+            }
 
-        if (collisions.length > 5) {
+            collisions = testCollision(player_settings, map);
 
-            speed = 0.2 + powerups.speedBoost.value;
+            if (collisions.length > 5) {
 
-        } else {
+                speed = 0.2 + powerups.speedBoost.value;
 
-            speed = 0.5 + powerups.speedBoost.value;
+            } else {
+
+                speed = 0.5 + powerups.speedBoost.value;
+
+            }
 
         }
 
@@ -555,6 +640,8 @@
     data.mario = loadSprite('images/mario.png', 'images/mario.json');
     data.corpses = loadSprite('images/corpses.png', 'images/corpses.json');
     data.powerups = loadSprite('images/powerups.png', 'images/powerups.json');
+    data.helper = loadSprite('images/helper.png', 'images/helper.json');
+    data.enemies = loadSprite('images/enemies.png', 'images/enemies.json');
     data.level1 = loadConfig('data/levels/level1.json');
 
     context.webkitImageSmoothingEnabled = false;

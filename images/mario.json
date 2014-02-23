@@ -1,5 +1,6 @@
 {
     "run": {
+        "loop": true,
         "frames": [
             {
                 "x": 0,
@@ -16,6 +17,7 @@
         ]
     },
     "awake": {
+        "loop": true,
         "frames": [
             {
                 "x": 51,
@@ -62,6 +64,7 @@
         ]
     },
     "climb": {
+        "loop": true,
         "frames": [
             {
                 "x": 0,
