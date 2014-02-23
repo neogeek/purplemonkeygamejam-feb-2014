@@ -5,7 +5,8 @@
 
     'use strict';
 
-    var context = canvas.getContext('2d'),
+    var DEBUG = false,
+        context = canvas.getContext('2d'),
         data = {},
         activeKeys = { up: false, down: false, left: false, right: false },
         player_settings = { x: 650, y: 160, width: 16, height: 29 },
@@ -264,16 +265,26 @@
 
         map = generate_map();
 
-        $('.logo').fadeIn(800).delay(1000).fadeOut(800);
+        if (!DEBUG) {
 
-        $(mario_settings).delay(2000).animate({ _x: 2350 }, { duration: 2500, easing: 'linear' });
+            $('.logo').fadeIn(800).delay(1000).fadeOut(800);
 
-        $(scene_settings).delay(1000).animate({ _x: -2000 }, 2000, function () {
+            $(mario_settings).delay(2000).animate({ _x: 2350 }, { duration: 2500, easing: 'linear' });
 
-            canvas.classList.add('depressing');
+            $(scene_settings).delay(1000).animate({ _x: -2000 }, 2000, function () {
 
-        });
-        $(scene_settings).delay(500).animate({ _y: -144 }, 1000);
+                canvas.classList.add('depressing');
+
+            });
+            $(scene_settings).delay(500).animate({ _y: -144 }, 1000);
+
+            document.querySelector('.sfx-background').play();
+
+        } else {
+
+            scene_settings = { _x: -2000, _y: -144 };
+
+        }
 
         function render_scene() {
 
