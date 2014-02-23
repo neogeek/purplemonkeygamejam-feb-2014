@@ -184,11 +184,11 @@
             enemies_list = Object.keys(data.enemies.config),
             map = [];
 
-        for (i = 0; i < 10000; i = i + 1) {
+        for (i = 0; i < 2000; i = i + 1) {
 
             map.push({
 
-                key: enemies_list[random(enemies_list.length -1)],
+                key: enemies_list[random(enemies_list.length - 1)],
                 x: random(1200),
                 y: random(200),
                 rotate: random(360)
@@ -204,16 +204,16 @@
     function scene_level(level) {
 
         var scene_settings = { _x: 0, _y: 80 },
-            mario_settings = { _x: 1800 },
+            mario_settings = { _x: 1800, _y: 116 },
             map = generate_map();
 
-        $(mario_settings).delay(2000).animate({ _x: 2350 }, 2500, 'linear');
+        $('.logo').fadeIn(800).delay(1000).fadeOut(800);
+
+        $(mario_settings).delay(2000).animate({ _x: 2350 }, { duration: 2500, easing: 'linear' });
 
         $(scene_settings).delay(1000).animate({ _x: -2000 }, 2000, function () {
 
             canvas.classList.add('depressing');
-
-            $('.logo').delay(600).fadeIn(500).delay(1000).fadeOut(500);
 
         });
         $(scene_settings).delay(500).animate({ _y: -144 }, 1000);
@@ -226,7 +226,7 @@
 
             drawSpriteSheet(level, data.sprites);
 
-            drawSprite(data.mario, 'run', mario_settings._x, 116);
+            drawSprite(data.mario, 'run', mario_settings._x, mario_settings._y);
 
             context.translate(1800, 175);
 

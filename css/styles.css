@@ -12,24 +12,15 @@
     box-sizing: border-box;
 }
 
-html,
 body {
-    width: 100%;
-    height: 100%;
-}
-
-body {
-    display: table;
-    -webkit-user-select: none;
-    cursor: default;
+    background-color: #000;
 }
 
 .wrapper {
-    display: table-cell;
-    margin: 0 auto;
-    width: 100%;
-    height: 100%;
-    max-width: 100%;
+    position: relative;
+    margin: 5em auto 0;
+    width: 1000px;
+    height: ;
     background-color: #000;
     vertical-align: middle;
 }
@@ -37,11 +28,11 @@ body {
 .logo {
     display: none;
     position: absolute;
-    top: 40%;
+    top: 20%;
     left: 0;
     width: 100%;
     font-family: 'Super Mario World Big';
-    font-size: 4em;
+    font-size: 3em;
     text-align: center;
     text-transform: uppercase;
     background: -webkit-linear-gradient(top, #fec100 0%, #f2ff00 25%, #f8f8f8 45%, #f8f8f8 55%, #f2ff00 75%, #fec100 100%);
@@ -52,9 +43,6 @@ body {
 }
 
 .stage {
-    display: block;
-    width: 100%;
-    height: auto;
     background-color: #0065BD;
 }
 
