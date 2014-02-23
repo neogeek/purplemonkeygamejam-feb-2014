@@ -1,0 +1,84 @@
+{
+    "lakitu": {
+        "loop": true,
+        "frames": [
+            {
+                "x": 0,
+                "y": 0,
+                "width": 28,
+                "height": 38
+            },
+            {
+                "x": 0,
+                "y": 39,
+                "width": 28,
+                "height": 38
+            },
+            {
+                "x": 0,
+                "y": 78,
+                "width": 28,
+                "height": 38
+            }
+        ]
+    },
+    "lakitu_speach_bubble": {
+        "loop": false,
+        "frames": [
+            {
+                "x": 29,
+                "y": 0,
+                "width": 87,
+                "height": 24
+            },
+            {
+                "x": 29,
+                "y": 25,
+                "width": 87,
+                "height": 24
+            },
+            {
+                "x": 29,
+                "y": 50,
+                "width": 87,
+                "height": 24
+            },
+            {
+                "x": 29,
+                "y": 75,
+                "width": 87,
+                "height": 24
+            },
+            {
+                "x": 29,
+                "y": 100,
+                "width": 87,
+                "height": 24
+            },
+            {
+                "x": 29,
+                "y": 125,
+                "width": 87,
+                "height": 24
+            },
+            {
+                "x": 29,
+                "y": 150,
+                "width": 87,
+                "height": 24
+            },
+            {
+                "x": 29,
+                "y": 175,
+                "width": 87,
+                "height": 24
+            },
+            {
+                "x": 29,
+                "y": 200,
+                "width": 87,
+                "height": 24
+            }
+        ]
+    }
+}
