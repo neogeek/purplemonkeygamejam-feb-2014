@@ -43,7 +43,8 @@ body {
 }
 
 .stage {
-    background-color: #0065BD;
+    background: #0065BD url('../images/background.png') repeat-x;
+    background-position: 0 bottom;
 }
 
 .depressing {
