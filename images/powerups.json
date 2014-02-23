@@ -1,0 +1,16 @@
+{
+    "bullet_bill": {
+        "x": 0,
+        "y": 0,
+        "width": 16,
+        "height": 14,
+        "explosivePower": 50
+    },
+    "bob_omb": {
+        "x": 0,
+        "y": 0,
+        "width": 16,
+        "height": 14,
+        "explosivePower": 30
+    }
+}
