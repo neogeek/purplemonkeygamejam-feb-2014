@@ -9,19 +9,22 @@
         context = canvas.getContext('2d'),
         data = {},
         activeKeys = { up: false, down: false, left: false, right: false },
-        player_settings = { x: 650, y: 160, width: 16, height: 29 },
+        player_settings = {
+            x: 650, y: 160,
+            width: 16, height: 29,
+            powerups: {
+                explosivePower: { value: 0, timeout: null, duration: 500 },
+                speedBoost: { value: 0, timeout: null, duration: 5000 },
+                sizeIncrease: { value: 0, timeout: null }
+            }
+        },
         helper_settings = { x: 500, y: -200, talk: false },
         current_scene = null,
         game_start = false,
         ftime = null,
         speed = 0.2,
         map = [],
-        enemies = [],
-        powerups = {
-            explosivePower: { value: 0, timeout: null, duration: 500 },
-            speedBoost: { value: 0, timeout: null, duration: 5000 },
-            sizeIncrease: { value: 0, timeout: null }
-        };
+        enemies = [];
 
     function isArray(obj) {
 
@@ -292,9 +295,14 @@
                 key: key,
                 x: random.apply(null, data.enemies.config[key].range.x),
                 y: random.apply(null, data.enemies.config[key].range.y),
-                width: 16,
-                height: 16,
-                velocity: data.enemies.config[key].velocity
+                width: data.enemies.config[key].frames[0].width,
+                height: data.enemies.config[key].frames[0].height,
+                velocity: data.enemies.config[key].velocity,
+                powerups: {
+                    explosivePower: { value: 0, timeout: null, duration: 500 },
+                    speedBoost: { value: 0, timeout: null, duration: 5000 },
+                    sizeIncrease: { value: 0, timeout: null }
+                }
 
             });
 
@@ -441,37 +449,37 @@
 
         }
 
-        if (powerups.explosivePower.value && !powerups.explosivePower.timeout) {
+        if (test.powerups.explosivePower.value && !test.powerups.explosivePower.timeout) {
 
-            test._SAT = new SAT.Circle(new SAT.Vector(test.x, test.y), powerups.explosivePower.value);
+            test._SAT = new SAT.Circle(new SAT.Vector(test.x, test.y), test.powerups.explosivePower.value);
 
             $(canvas).animate({ zoom: 1.01 }, 25).animate({ zoom: 1 }, 25);
 
-            powerups.explosivePower.timeout = setTimeout(function () {
+            test.powerups.explosivePower.timeout = setTimeout(function () {
 
-                powerups.explosivePower.value = 0;
+                test.powerups.explosivePower.value = 0;
 
                 test._SAT = null;
 
-                clearTimeout(powerups.explosivePower.timeout);
+                clearTimeout(test.powerups.explosivePower.timeout);
 
-                powerups.explosivePower.timeout = null;
+                test.powerups.explosivePower.timeout = null;
 
-            }, powerups.explosivePower.duration);
+            }, test.powerups.explosivePower.duration);
 
         }
 
-        if (powerups.speedBoost.value && !powerups.speedBoost.timeout) {
+        if (test.powerups.speedBoost.value && !test.powerups.speedBoost.timeout) {
 
-            powerups.speedBoost.timeout = setTimeout(function () {
+            test.powerups.speedBoost.timeout = setTimeout(function () {
 
-                powerups.speedBoost.value = 0;
+                test.powerups.speedBoost.value = 0;
 
-                clearTimeout(powerups.speedBoost.timeout);
+                clearTimeout(test.powerups.speedBoost.timeout);
 
-                powerups.speedBoost.timeout = null;
+                test.powerups.speedBoost.timeout = null;
 
-            }, powerups.speedBoost.duration);
+            }, test.powerups.speedBoost.duration);
 
         }
 
@@ -501,7 +509,7 @@
 
                 if (Math.abs(response.overlapV.x) > 5 || Math.abs(response.overlapV.y) > 5) {
 
-                    if (powerups.explosivePower.value) {
+                    if (test.powerups.explosivePower.value) {
 
                         $(item).stop().animate({
                             x: item.x - (test.x - item.x),
@@ -512,7 +520,7 @@
 
                         }(item)));
 
-                    } else if (powerups.speedBoost.value) {
+                    } else if (test.powerups.speedBoost.value) {
 
                         item.x = item.x - (test.x - item.x) / 4;
                         item.y = item.y - (test.y - item.y) / 4;
@@ -538,23 +546,23 @@
 
                 if (item.explosivePower) {
 
-                    powerups.explosivePower.value = item.explosivePower;
+                    test.powerups.explosivePower.value = item.explosivePower;
 
                     against[key] = null;
 
                 } else if (item.speedBoost) {
 
-                    clearTimeout(powerups.speedBoost.timeout);
+                    clearTimeout(test.powerups.speedBoost.timeout);
 
-                    powerups.speedBoost.value = item.speedBoost;
+                    test.powerups.speedBoost.value = item.speedBoost;
 
                     against[key] = null;
 
                 } else if (item.sizeIncrease) {
 
-                    clearTimeout(powerups.sizeIncrease.timeout);
+                    clearTimeout(test.powerups.sizeIncrease.timeout);
 
-                    powerups.sizeIncrease.value = item.sizeIncrease;
+                    test.powerups.sizeIncrease.value = item.sizeIncrease;
 
                     against[key] = null;
 
@@ -610,11 +618,11 @@
 
             if (collisions.length > 5) {
 
-                speed = 0.2 + powerups.speedBoost.value;
+                speed = 0.2 + player_settings.powerups.speedBoost.value;
 
             } else {
 
-                speed = 0.5 + powerups.speedBoost.value;
+                speed = 0.5 + player_settings.powerups.speedBoost.value;
 
             }
 
