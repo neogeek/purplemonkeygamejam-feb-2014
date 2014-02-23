@@ -7,6 +7,8 @@
 
     var context = canvas.getContext('2d'),
         data = {},
+        activeKeys = { up: false, down: false, left: false, right: false },
+        player_settings = { x: 450, y: 160 },
         current_scene = null,
         ftime = null;
 
@@ -181,14 +183,15 @@
     function generate_map() {
 
         var i,
-            corpses_list = Object.keys(data.corpses.config),
+            enemies_list = Object.keys(data.enemies.config),
             map = [];
 
         for (i = 0; i < 2000; i = i + 1) {
 
             map.push({
 
-                key: corpses_list[random(corpses_list.length - 1)],
+                sprite: data.enemies,
+                key: enemies_list[random(enemies_list.length - 1)],
                 x: random(1200),
                 y: random(200),
                 rotate: random(360)
@@ -196,6 +199,22 @@
             });
 
         }
+
+        for (i = 0; i < 100; i = i + 1) {
+
+            map.push({
+
+                sprite: data.mario,
+                key: 'dead',
+                x: random(1200),
+                y: random(200),
+                rotate: random(360)
+
+            });
+
+        }
+
+        map.sort(function () { return 0.5 - Math.random(); });
 
         return map;
 
@@ -218,6 +237,8 @@
         });
         $(scene_settings).delay(500).animate({ _y: -144 }, 1000);
 
+        scene_settings = { _x: -2000, _y: -144 };
+
         function render_scene() {
 
             context.save();
@@ -237,19 +258,19 @@
                 context.translate(item.x, item.y);
 
                 context.translate(
-                    data.corpses.config[item.key].width,
-                    data.corpses.config[item.key].height
+                    item.sprite.config[item.key].width,
+                    item.sprite.config[item.key].height
                 );
 
                 context.rotate(item.rotate * Math.PI / 180);
 
                 context.translate(
-                    -data.corpses.config[item.key].width,
-                    -data.corpses.config[item.key].height
+                    -item.sprite.config[item.key].width,
+                    -item.sprite.config[item.key].height
                 );
 
                 drawSprite(
-                    data.corpses,
+                    item.sprite,
                     item.key,
                     0,
                     0
@@ -258,6 +279,10 @@
                 context.restore();
 
             });
+
+            context.translate(200, 0);
+
+            drawSprite(data.mario, 'climb', player_settings.x, player_settings.y);
 
             context.restore();
 
@@ -271,9 +296,31 @@
 
     function draw(time) {
 
+        var speed = .2;
+
         ftime = time;
 
         context.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (activeKeys.up) {
+
+            player_settings.y = player_settings.y - speed;
+
+        } else if (activeKeys.down) {
+
+            player_settings.y = player_settings.y + speed;
+
+        }
+
+        if (activeKeys.left) {
+
+            player_settings.x = player_settings.x - speed;
+
+        } else if (activeKeys.right) {
+
+            player_settings.x = player_settings.x + speed;
+
+        }
 
         if (!current_scene) {
 
@@ -293,7 +340,7 @@
 
     data.sprites = loadSprite('images/sprites.png', 'images/sprites.json');
     data.mario = loadSprite('images/mario.png', 'images/mario.json');
-    data.corpses = loadSprite('images/corpses.png', 'images/corpses.json');
+    data.enemies = loadSprite('images/enemies.png', 'images/enemies.json');
     data.level1 = loadConfig('data/levels/level1.json');
 
     context.webkitImageSmoothingEnabled = false;
@@ -301,5 +348,61 @@
     context.scale(2, 2);
 
     window.requestAnimationFrame(draw);
+
+    document.addEventListener('keydown', function (e) {
+
+        if ([37, 28, 39, 40].indexOf(e.keyCode) !== -1) {
+
+            e.preventDefault();
+
+        }
+
+        if (e.keyCode === 38) {
+
+            activeKeys.up = true;
+            activeKeys.down = false;
+
+        } else if (e.keyCode === 40) {
+
+            activeKeys.down = true;
+            activeKeys.up = false;
+
+        }
+
+        if (e.keyCode === 37) {
+
+            activeKeys.left = true;
+            activeKeys.right = false;
+
+        } else if (e.keyCode === 39) {
+
+            activeKeys.right = true;
+            activeKeys.left = false;
+
+        }
+
+    });
+
+    document.addEventListener('keyup', function (e) {
+
+        if (e.keyCode === 38) {
+
+            activeKeys.up = false;
+
+        } else if (e.keyCode === 40) {
+
+            activeKeys.down = false;
+
+        } if (e.keyCode === 37) {
+
+            activeKeys.left = false;
+
+        } else if (e.keyCode === 39) {
+
+            activeKeys.right = false;
+
+        }
+
+    });
 
 }(document.querySelector('.stage')));
