@@ -1,0 +1,74 @@
+{
+    "koopa_green_1": {
+        "x": 0,
+        "y": 0,
+        "width": 16,
+        "height": 27
+    },
+    "koopa_red_1": {
+        "x": 0,
+        "y": 28,
+        "width": 16,
+        "height": 27
+    },
+    "koopa_blue_1": {
+        "x": 0,
+        "y": 56,
+        "width": 16,
+        "height": 27
+    },
+    "koopa_yellow_1": {
+        "x": 0,
+        "y": 84,
+        "width": 16,
+        "height": 27
+    },
+    "koopa_green_2": {
+        "x": 17,
+        "y": 0,
+        "width": 16,
+        "height": 31
+    },
+    "koopa_red_2": {
+        "x": 17,
+        "y": 32,
+        "width": 16,
+        "height": 32
+    },
+    "koopa_blue_2": {
+        "x": 17,
+        "y": 65,
+        "width": 16,
+        "height": 32
+    },
+    "koopa_yellow_2": {
+        "x": 17,
+        "y": 98,
+        "width": 16,
+        "height": 32
+    },
+    "koopa_green_3": {
+        "x": 34,
+        "y": 0,
+        "width": 16,
+        "height": 32
+    },
+    "koopa_red_3": {
+        "x": 34,
+        "y": 33,
+        "width": 16,
+        "height": 32
+    },
+    "koopa_blue_3": {
+        "x": 34,
+        "y": 66,
+        "width": 16,
+        "height": 32
+    },
+    "koopa_yellow_3": {
+        "x": 34,
+        "y": 66,
+        "width": 16,
+        "height": 32
+    }
+}

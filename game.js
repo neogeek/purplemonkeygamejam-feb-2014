@@ -175,7 +175,8 @@
     function scene_level(level) {
 
         var scene_settings = { _x: 0, _y: 80 },
-            mario_settings = { _x: 1800 };
+            mario_settings = { _x: 1800 },
+            enemies_list = Object.keys(data.enemies);
 
         $(mario_settings).delay(2000).animate({ _x: 2350 }, 2500, 'linear');
 
@@ -197,6 +198,12 @@
             drawSpriteSheet(level, data.sprites);
 
             drawSprite(data.mario, 'run', mario_settings._x, 116);
+
+            context.translate(2000, 180);
+
+
+
+            drawSprite(data.enemies, 'koopa_red_1', 0, 0);
 
             context.restore();
 
@@ -238,6 +245,7 @@
 
     data.sprites = loadSprite('images/sprites.png', 'images/sprites.json');
     data.mario = loadSprite('images/mario.png', 'images/mario.json');
+    data.enemies = loadSprite('images/enemies.png', 'images/enemies.json');
     data.level1 = loadConfig('data/levels/level1.json');
 
     context.webkitImageSmoothingEnabled = false;
