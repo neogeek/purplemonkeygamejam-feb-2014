@@ -275,10 +275,6 @@
 
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        context.save();
-
-        context.scale(2, 2);
-
         if (!current_scene) {
 
             current_scene = scene_level(data.level1);
@@ -288,8 +284,6 @@
             current_scene();
 
         }
-
-        context.restore();
 
         window.requestAnimationFrame(draw);
 
@@ -303,6 +297,8 @@
     data.level1 = loadConfig('data/levels/level1.json');
 
     context.webkitImageSmoothingEnabled = false;
+
+    context.scale(2, 2);
 
     window.requestAnimationFrame(draw);
 
