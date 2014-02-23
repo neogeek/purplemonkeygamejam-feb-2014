@@ -15,9 +15,9 @@
         speed = 0.2,
         map = [],
         powerups = {
-            explosivePower: 0,
-            speedBoost: 0,
-            sizeIncrease: 0
+            explosivePower: { value: 0, timeout: null, duration: 500 },
+            speedBoost: { value: 0, timeout: null, duration: 5000 },
+            sizeIncrease: { value: 0, timeout: null }
         };
 
     function isArray(obj) {
@@ -360,28 +360,35 @@
 
         }
 
-        if (powerups.explosivePower) {
+        if (powerups.explosivePower.value && !powerups.explosivePower.timeout) {
 
-            test._SAT = new SAT.Box(
-                new SAT.Vector(
-                    test.x - powerups.explosivePower / 2,
-                    test.y - powerups.explosivePower / 2
-                ),
-                test.width + powerups.explosivePower,
-                test.height + powerups.explosivePower
-            ).toPolygon();
+            test._SAT = new SAT.Circle(new SAT.Vector(test.x, test.y), powerups.explosivePower.value);
 
             $(canvas).animate({ zoom: 1.01 }, 25).animate({ zoom: 1 }, 25);
 
-            setTimeout(function () { powerups.explosivePower = 0; }, 100);
+            powerups.explosivePower.timeout = setTimeout(function () {
+
+                powerups.explosivePower.value = 0;
+
+                clearTimeout(powerups.explosivePower.timeout);
+
+                powerups.explosivePower.timeout = null;
+
+            }, powerups.explosivePower.duration);
 
         }
 
-        if (powerups.speedBoost) {
+        if (powerups.speedBoost.value && !powerups.speedBoost.timeout) {
 
-            setTimeout(function () {
-                powerups.speedBoost = 0;
-            }, 2000);
+            powerups.speedBoost.timeout = setTimeout(function () {
+
+                powerups.speedBoost.value = 0;
+
+                clearTimeout(powerups.speedBoost.timeout);
+
+                powerups.speedBoost.timeout = null;
+
+            }, powerups.speedBoost.duration);
 
         }
 
@@ -397,20 +404,28 @@
 
             }
 
-            collision_test = SAT.testPolygonPolygon(test._SAT, item._SAT, response);
+            if (test._SAT instanceof SAT.Polygon) {
+
+                collision_test = SAT.testPolygonPolygon(test._SAT, item._SAT, response);
+
+            } else if (test._SAT instanceof SAT.Circle) {
+
+                collision_test = SAT.testPolygonCircle(item._SAT, test._SAT, response);
+
+            }
 
             if (collision_test) {
 
                 if (Math.abs(response.overlapV.x) > 5 || Math.abs(response.overlapV.y) > 5) {
 
-                    if (powerups.explosivePower) {
+                    if (powerups.explosivePower.value) {
 
                         $(item).stop().animate({
                             x: item.x - (test.x - item.x),
                             y: item.y - (test.y - item.y)
                         }, 100, 'easeOutCubic', (function (item) { item._SAT = null; }(item)));
 
-                    } else if (powerups.speedBoost) {
+                    } else if (powerups.speedBoost.value) {
 
                         item.x = item.x - (test.x - item.x) / 4,
                         item.y = item.y - (test.y - item.y) / 4
@@ -432,19 +447,25 @@
 
                 if (item.explosivePower) {
 
-                    powerups.explosivePower = item.explosivePower;
+                    clearTimeout(powerups.explosivePower.timeout);
+
+                    powerups.explosivePower.value = item.explosivePower;
 
                     against[key] = null;
 
                 } else if (item.speedBoost) {
 
-                    powerups.speedBoost = item.speedBoost;
+                    clearTimeout(powerups.speedBoost.timeout);
+
+                    powerups.speedBoost.value = item.speedBoost;
 
                     against[key] = null;
 
                 } else if (item.sizeIncrease) {
 
-                    powerups.sizeIncrease = item.sizeIncrease;
+                    clearTimeout(powerups.sizeIncrease.timeout);
+
+                    powerups.sizeIncrease.value = item.sizeIncrease;
 
                     against[key] = null;
 
@@ -466,35 +487,31 @@
 
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        if (!powerups.explosivePower) {
+        if (activeKeys.up) {
 
-            if (activeKeys.up) {
+            player_settings.y = player_settings.y - speed;
 
-                player_settings.y = player_settings.y - speed;
+            player_settings._SAT = null;
 
-                player_settings._SAT = null;
+        } else if (activeKeys.down) {
 
-            } else if (activeKeys.down) {
+            player_settings.y = player_settings.y + speed;
 
-                player_settings.y = player_settings.y + speed;
+            player_settings._SAT = null;
 
-                player_settings._SAT = null;
+        }
 
-            }
+        if (activeKeys.left) {
 
-            if (activeKeys.left) {
+            player_settings.x = player_settings.x - speed;
 
-                player_settings.x = player_settings.x - speed;
+            player_settings._SAT = null;
 
-                player_settings._SAT = null;
+        } else if (activeKeys.right) {
 
-            } else if (activeKeys.right) {
+            player_settings.x = player_settings.x + speed;
 
-                player_settings.x = player_settings.x + speed;
-
-                player_settings._SAT = null;
-
-            }
+            player_settings._SAT = null;
 
         }
 
@@ -502,11 +519,11 @@
 
         if (collisions.length > 5) {
 
-            speed = 0.2 + powerups.speedBoost;
+            speed = 0.2 + powerups.speedBoost.value;
 
         } else {
 
-            speed = 0.5 + powerups.speedBoost;
+            speed = 0.5 + powerups.speedBoost.value;
 
         }
 
