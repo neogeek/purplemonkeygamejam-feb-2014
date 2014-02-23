@@ -191,23 +191,23 @@
     function generate_map() {
 
         var i,
-            enemies_list = Object.keys(data.enemies.config),
+            corpses_list = Object.keys(data.corpses.config),
             powerups_list = Object.keys(data.powerups.config),
             map_output = [],
             key;
 
         for (i = 0; i < 2000; i = i + 1) {
 
-            key = enemies_list[random(enemies_list.length)];
+            key = corpses_list[random(corpses_list.length)];
 
             map_output.push({
 
-                sprite: data.enemies,
+                sprite: data.corpses,
                 key: key,
                 x: random(1200),
                 y: random(200),
-                width: data.enemies.config[key].width,
-                height: data.enemies.config[key].height,
+                width: data.corpses.config[key].width,
+                height: data.corpses.config[key].height,
                 alpha: 100,
                 rotate: random(360)
 
@@ -553,7 +553,7 @@
 
     data.sprites = loadSprite('images/sprites.png', 'images/sprites.json');
     data.mario = loadSprite('images/mario.png', 'images/mario.json');
-    data.enemies = loadSprite('images/enemies.png', 'images/enemies.json');
+    data.corpses = loadSprite('images/corpses.png', 'images/corpses.json');
     data.powerups = loadSprite('images/powerups.png', 'images/powerups.json');
     data.level1 = loadConfig('data/levels/level1.json');
 
