@@ -315,7 +315,11 @@
         var collisions = [],
             collision_test;
 
-        test._SAT = new SAT.Box(new SAT.Vector(test.x, test.y), test.width, test.height).toPolygon();
+        if (!test._SAT) {
+
+            test._SAT = new SAT.Box(new SAT.Vector(test.x, test.y), test.width, test.height).toPolygon();
+
+        }
 
         against.forEach(function (item, key) {
 
@@ -323,7 +327,11 @@
 
             if (!item) { return false; }
 
-            item._SAT = new SAT.Box(new SAT.Vector(item.x, item.y), item.width, item.height).toPolygon();
+            if (!item._SAT) {
+
+                item._SAT = new SAT.Box(new SAT.Vector(item.x, item.y), item.width, item.height).toPolygon();
+
+            }
 
             collision_test = SAT.testPolygonPolygon(test._SAT, item._SAT, response);
 
@@ -331,15 +339,12 @@
 
                 collisions.push(response);
 
-                if (Math.abs(response.overlapV.x) > 5) {
+                if (Math.abs(response.overlapV.x) > 5 || Math.abs(response.overlapV.y) > 5) {
 
-                    item.x = item.x - (test.x - item.x) / 5;
-                    item.y = item.y - (test.y - item.y) / 5;
-
-                } else if (Math.abs(response.overlapV.y) > 5) {
-
-                    item.x = item.x - (test.x - item.x) / 5;
-                    item.y = item.y - (test.y - item.y) / 5;
+                    $(item).stop().animate({
+                        x: item.x - (test.x - item.x) / 5,
+                        y: item.y - (test.y - item.y) / 5
+                    }, 300, 'linear', (function (item) { item._SAT = null; }(item)));
 
                 }
 
@@ -363,9 +368,13 @@
 
             player_settings.y = player_settings.y - speed;
 
+            player_settings._SAT = null;
+
         } else if (activeKeys.down) {
 
             player_settings.y = player_settings.y + speed;
+
+            player_settings._SAT = null;
 
         }
 
@@ -373,9 +382,13 @@
 
             player_settings.x = player_settings.x - speed;
 
+            player_settings._SAT = null;
+
         } else if (activeKeys.right) {
 
             player_settings.x = player_settings.x + speed;
+
+            player_settings._SAT = null;
 
         }
 
