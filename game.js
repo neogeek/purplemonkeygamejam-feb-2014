@@ -181,14 +181,14 @@
     function generate_map() {
 
         var i,
-            enemies_list = Object.keys(data.enemies.config),
+            corpses_list = Object.keys(data.corpses.config),
             map = [];
 
         for (i = 0; i < 2000; i = i + 1) {
 
             map.push({
 
-                key: enemies_list[random(enemies_list.length - 1)],
+                key: corpses_list[random(corpses_list.length - 1)],
                 x: random(1200),
                 y: random(200),
                 rotate: random(360)
@@ -237,19 +237,19 @@
                 context.translate(item.x, item.y);
 
                 context.translate(
-                    data.enemies.config[item.key].width,
-                    data.enemies.config[item.key].height
+                    data.corpses.config[item.key].width,
+                    data.corpses.config[item.key].height
                 );
 
                 context.rotate(item.rotate * Math.PI / 180);
 
                 context.translate(
-                    -data.enemies.config[item.key].width,
-                    -data.enemies.config[item.key].height
+                    -data.corpses.config[item.key].width,
+                    -data.corpses.config[item.key].height
                 );
 
                 drawSprite(
-                    data.enemies,
+                    data.corpses,
                     item.key,
                     0,
                     0
@@ -299,7 +299,7 @@
 
     data.sprites = loadSprite('images/sprites.png', 'images/sprites.json');
     data.mario = loadSprite('images/mario.png', 'images/mario.json');
-    data.enemies = loadSprite('images/enemies.png', 'images/enemies.json');
+    data.corpses = loadSprite('images/corpses.png', 'images/corpses.json');
     data.level1 = loadConfig('data/levels/level1.json');
 
     context.webkitImageSmoothingEnabled = false;
