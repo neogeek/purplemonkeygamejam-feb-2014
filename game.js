@@ -571,6 +571,9 @@
 
             $(canvas).animate({ zoom: 1.015 }, 25).animate({ zoom: 1 }, 25);
 
+            document.querySelector('.sfx-explosion').currentTime = 0;
+            document.querySelector('.sfx-explosion').play();
+
             item.powerups.explosivePower.timeout = setTimeout(function () {
 
                 item.powerups.explosivePower.value = 0;
