@@ -27,8 +27,8 @@
     "koopa_red": {
         "loop": true,
         "velocity": {
-            "x": 1,
-            "y": 1
+            "x": 0.75,
+            "y": 0.75
         },
         "range": {
             "x": [ 400, 200 ],

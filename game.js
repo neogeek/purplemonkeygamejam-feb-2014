@@ -412,7 +412,8 @@
 
                 }
 
-                testCollision(item, map);
+                parsePowerUps(item);
+                resolveCollisions(testCollision(item, map), map);
 
                 context.restore();
 
@@ -449,40 +450,6 @@
 
         }
 
-        if (test.powerups.explosivePower.value && !test.powerups.explosivePower.timeout) {
-
-            test._SAT = new SAT.Circle(new SAT.Vector(test.x, test.y), test.powerups.explosivePower.value);
-
-            $(canvas).animate({ zoom: 1.01 }, 25).animate({ zoom: 1 }, 25);
-
-            test.powerups.explosivePower.timeout = setTimeout(function () {
-
-                test.powerups.explosivePower.value = 0;
-
-                test._SAT = null;
-
-                clearTimeout(test.powerups.explosivePower.timeout);
-
-                test.powerups.explosivePower.timeout = null;
-
-            }, test.powerups.explosivePower.duration);
-
-        }
-
-        if (test.powerups.speedBoost.value && !test.powerups.speedBoost.timeout) {
-
-            test.powerups.speedBoost.timeout = setTimeout(function () {
-
-                test.powerups.speedBoost.value = 0;
-
-                clearTimeout(test.powerups.speedBoost.timeout);
-
-                test.powerups.speedBoost.timeout = null;
-
-            }, test.powerups.speedBoost.duration);
-
-        }
-
         against.forEach(function (item, key) {
 
             var response = new SAT.Response();
@@ -495,77 +462,97 @@
 
             }
 
-            if (test._SAT instanceof SAT.Polygon) {
+            if (item._SAT instanceof SAT.Polygon && test._SAT instanceof SAT.Polygon) {
 
                 collision_test = SAT.testPolygonPolygon(item._SAT, test._SAT, response);
 
-            } else if (test._SAT instanceof SAT.Circle) {
+            } else if (item._SAT instanceof SAT.Polygon && test._SAT instanceof SAT.Circle) {
 
                 collision_test = SAT.testPolygonCircle(item._SAT, test._SAT, response);
+
+            } else if (item._SAT instanceof SAT.Circle && test._SAT instanceof SAT.Polygon) {
+
+                collision_test = SAT.testPolygonCircle(test._SAT, item._SAT, response);
 
             }
 
             if (collision_test) {
 
-                if (Math.abs(response.overlapV.x) > 5 || Math.abs(response.overlapV.y) > 5) {
+                collisions.push({ a: test, b: item, response: response, key: key });
 
-                    if (test.powerups.explosivePower.value) {
+            }
 
-                        $(item).stop().animate({
-                            x: item.x - (test.x - item.x),
-                            y: item.y - (test.y - item.y)
-                        }, 400, 'easeOutCubic', (function (item) {
+        });
 
-                            item._SAT = null;
+        return collisions;
 
-                        }(item)));
+    }
 
-                    } else if (test.powerups.speedBoost.value) {
+    function resolveCollisions(collisions, set) {
 
-                        item.x = item.x - (test.x - item.x) / 4;
-                        item.y = item.y - (test.y - item.y) / 4;
+        collisions.forEach(function (collision) {
+
+            if (Math.abs(collision.response.overlapV.x) > 5 || Math.abs(collision.response.overlapV.y) > 5) {
+
+                if (collision.a.powerups.explosivePower.value) {
+
+                    $(collision.b).stop().animate({
+                        x: collision.b.x - (collision.a.x - collision.b.x),
+                        y: collision.b.y - (collision.a.y - collision.b.y)
+                    }, 400, 'easeOutCubic', (function (item) {
 
                         item._SAT = null;
 
-                    } else {
+                    }(collision.b)));
 
-                        $(item).stop().animate({
-                            x: item.x - (test.x - item.x) / 5,
-                            y: item.y - (test.y - item.y) / 5
-                        }, 300, 'linear', (function (item) {
+                } else if (collision.a.powerups.speedBoost.value) {
 
-                            item._SAT = null;
+                    collision.b.x = collision.b.x - (collision.a.x - collision.b.x) / 4;
+                    collision.b.y = collision.b.y - (collision.a.y - collision.b.y) / 4;
 
-                        }(item)));
+                    collision.b._SAT = null;
 
-                    }
+                } else {
+
+                    $(collision.b).stop().animate({
+                        x: collision.b.x - (collision.a.x - collision.b.x) / 5,
+                        y: collision.b.y - (collision.a.y - collision.b.y) / 5
+                    }, 300, 'linear', (function (item) {
+
+                        item._SAT = null;
+
+                    }(collision.b)));
 
                 }
 
-                collisions.push(response);
+            }
 
-                if (item.explosivePower) {
+            if (collision.b.explosivePower) {
 
-                    test.powerups.explosivePower.value = item.explosivePower;
+                collision.a.powerups.explosivePower.value = collision.b.explosivePower;
 
-                    against[key] = null;
+                if (set) {
+                    set[collision.key] = null;
+                }
 
-                } else if (item.speedBoost) {
+            } else if (collision.b.speedBoost) {
 
-                    clearTimeout(test.powerups.speedBoost.timeout);
+                clearTimeout(collision.a.powerups.speedBoost.timeout);
 
-                    test.powerups.speedBoost.value = item.speedBoost;
+                collision.a.powerups.speedBoost.value = collision.b.speedBoost;
 
-                    against[key] = null;
+                if (set) {
+                    set[collision.key] = null;
+                }
 
-                } else if (item.sizeIncrease) {
+            } else if (collision.b.sizeIncrease) {
 
-                    clearTimeout(test.powerups.sizeIncrease.timeout);
+                clearTimeout(collision.a.powerups.sizeIncrease.timeout);
 
-                    test.powerups.sizeIncrease.value = item.sizeIncrease;
+                collision.a.powerups.sizeIncrease.value = collision.b.sizeIncrease;
 
-                    against[key] = null;
-
+                if (set) {
+                    set[collision.key] = null;
                 }
 
             }
@@ -573,6 +560,44 @@
         });
 
         return collisions;
+
+    }
+
+    function parsePowerUps(item) {
+
+        if (item.powerups.explosivePower.value && !item.powerups.explosivePower.timeout) {
+
+            item._SAT = new SAT.Circle(new SAT.Vector(item.x, item.y), item.powerups.explosivePower.value);
+
+            $(canvas).animate({ zoom: 1.015 }, 25).animate({ zoom: 1 }, 25);
+
+            item.powerups.explosivePower.timeout = setTimeout(function () {
+
+                item.powerups.explosivePower.value = 0;
+
+                item._SAT = null;
+
+                clearTimeout(item.powerups.explosivePower.timeout);
+
+                item.powerups.explosivePower.timeout = null;
+
+            }, item.powerups.explosivePower.duration);
+
+        }
+
+        if (item.powerups.speedBoost.value && !item.powerups.speedBoost.timeout) {
+
+            item.powerups.speedBoost.timeout = setTimeout(function () {
+
+                item.powerups.speedBoost.value = 0;
+
+                clearTimeout(item.powerups.speedBoost.timeout);
+
+                item.powerups.speedBoost.timeout = null;
+
+            }, item.powerups.speedBoost.duration);
+
+        }
 
     }
 
@@ -614,7 +639,9 @@
 
             }
 
-            collisions = testCollision(player_settings, map);
+            parsePowerUps(player_settings);
+
+            collisions = resolveCollisions(testCollision(player_settings, map), map);
 
             if (collisions.length > 5) {
 
@@ -623,6 +650,20 @@
             } else {
 
                 speed = 0.5 + player_settings.powerups.speedBoost.value;
+
+            }
+
+            if (testCollision(player_settings, enemies).length) {
+
+                alert('OH NO!!!!!!1');
+
+                game_start = false;
+
+            } else if (player_settings.y < -60) {
+
+                alert('You Win!');
+
+                game_start = false;
 
             }
 
