@@ -70,5 +70,119 @@
         "y": 66,
         "width": 16,
         "height": 32
+    },
+    "koopa_green_4": {
+        "x": 51,
+        "y": 0,
+        "width": 14,
+        "height": 30
+    },
+    "koopa_red_4": {
+        "x": 51,
+        "y": 31,
+        "width": 14,
+        "height": 30
+    },
+    "koopa_blue_4": {
+        "x": 51,
+        "y": 62,
+        "width": 14,
+        "height": 30
+    },
+    "koopa_yellow_4": {
+        "x": 51,
+        "y": 93,
+        "width": 14,
+        "height": 30
+    },
+    "koopa_green_5": {
+        "x": 66,
+        "y": 0,
+        "width": 16,
+        "height": 16
+    },
+    "koopa_green_6": {
+        "x": 66,
+        "y": 17,
+        "width": 16,
+        "height": 8
+    },
+    "koopa_red_5": {
+        "x": 66,
+        "y": 26,
+        "width": 16,
+        "height": 16
+    },
+    "koopa_red_6": {
+        "x": 66,
+        "y": 43,
+        "width": 16,
+        "height": 8
+    },
+    "koopa_blue_5": {
+        "x": 66,
+        "y": 52,
+        "width": 16,
+        "height": 16
+    },
+    "koopa_blue_6": {
+        "x": 66,
+        "y": 69,
+        "width": 16,
+        "height": 8
+    },
+    "koopa_yellow_5": {
+        "x": 66,
+        "y": 78,
+        "width": 16,
+        "height": 16
+    },
+    "koopa_yellow_6": {
+        "x": 66,
+        "y": 95,
+        "width": 16,
+        "height": 8
+    },
+    "rex_1": {
+        "x": 83,
+        "y": 0,
+        "width": 16,
+        "height": 16
+    },
+    "rex_2": {
+        "x": 83,
+        "y": 17,
+        "width": 16,
+        "height": 15
+    },
+    "lakitu_1": {
+        "x": 100,
+        "y": 0,
+        "width": 16,
+        "height": 30
+    },
+    "lakitu_2": {
+        "x": 100,
+        "y": 31,
+        "width": 16,
+        "height": 30
+    },
+    "bones_1": {
+        "x": 117,
+        "y": 0,
+        "width": 16,
+        "height": 11
+    },
+    "bones_2": {
+        "x": 117,
+        "y": 12,
+        "width": 12,
+        "height": 16
+    },
+    "bones_3": {
+        "x": 134,
+        "y": 0,
+        "width": 24,
+        "height": 10
     }
 }

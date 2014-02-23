@@ -16,6 +16,12 @@
 
     }
 
+    function random(num) {
+
+        return Math.floor(Math.random() * num) + 1;
+
+    }
+
     function showConsoleHeader(text) {
 
         console.log(
@@ -172,11 +178,34 @@
 
     }
 
+    function generate_map() {
+
+        var i,
+            enemies_list = Object.keys(data.enemies.config),
+            map = [];
+
+        for (i = 0; i < 10000; i = i + 1) {
+
+            map.push({
+
+                key: enemies_list[random(enemies_list.length -1)],
+                x: random(1200),
+                y: random(200),
+                rotate: random(360)
+
+            });
+
+        }
+
+        return map;
+
+    }
+
     function scene_level(level) {
 
         var scene_settings = { _x: 0, _y: 80 },
             mario_settings = { _x: 1800 },
-            enemies_list = Object.keys(data.enemies);
+            map = generate_map();
 
         $(mario_settings).delay(2000).animate({ _x: 2350 }, 2500, 'linear');
 
@@ -187,7 +216,7 @@
             $('.logo').delay(600).fadeIn(500).delay(1000).fadeOut(500);
 
         });
-        $(scene_settings).delay(300).animate({ _y: -144 }, 1000);
+        $(scene_settings).delay(500).animate({ _y: -144 }, 1000);
 
         function render_scene() {
 
@@ -199,11 +228,36 @@
 
             drawSprite(data.mario, 'run', mario_settings._x, 116);
 
-            context.translate(2000, 180);
+            context.translate(1800, 175);
 
+            map.forEach(function (item) {
 
+                context.save();
 
-            drawSprite(data.enemies, 'koopa_red_1', 0, 0);
+                context.translate(item.x, item.y);
+
+                context.translate(
+                    data.enemies.config[item.key].width,
+                    data.enemies.config[item.key].height
+                );
+
+                context.rotate(item.rotate * Math.PI / 180);
+
+                context.translate(
+                    -data.enemies.config[item.key].width,
+                    -data.enemies.config[item.key].height
+                );
+
+                drawSprite(
+                    data.enemies,
+                    item.key,
+                    0,
+                    0
+                );
+
+                context.restore();
+
+            });
 
             context.restore();
 
